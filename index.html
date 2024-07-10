@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Badminton Matches</title>
+  <style>
+    /* Add your custom CSS styles here */
+  </style>
+</head>
+<body>
+  <h1>Badminton Matches</h1>
+  
+  <label for="player-input">Enter player names:</label>
+  <input type="text" id="player-input">
+  <button onclick="addPlayer()">Add Player</button>
+  
+  <h2>Player List:</h2>
+  <ul id="player-list"></ul>
+  
+  <button onclick="generateMatches()">Generate Matches</button>
+  
+  <h2>Match List:</h2>
+  <ul id="match-list"></ul>
+  
+  <label for="remove-player-input">Enter player names to remove:</label>
+  <input type="text" id="remove-player-input">
+  <button onclick="removeMatches()">Remove Matches</button>
+  
+  <script>
+    let players = [];
+    let matches = [];
+    
+    function addPlayer() {
+      const playerInput = document.getElementById("player-input");
+      const playerName = playerInput.value.trim();
+      
+      if (playerName !== "") {
+        players.push(playerName);
+        playerInput.value = "";
+        renderPlayerList();
+      }
+    }
+    
+    function renderPlayerList() {
+      const playerList = document.getElementById("player-list");
+      playerList.innerHTML = "";
+      
+      players.forEach(player => {
+        const li = document.createElement("li");
+        li.textContent = player;
+        playerList.appendChild(li);
+      });
+    }
+    
+    function generateMatches() {
+      matches = [];
+      
+      for (let i = 0; i < players.length - 1; i++) {
+        for (let j = i + 1; j < players.length; j++) {
+          matches.push({
+            team1: [players[i], players[j]],
+            team2: [],
+            winner: null,
+            done: false
+          });
+        }
+      }
+      
+      renderMatchList();
+    }
+    
+    function renderMatchList() {
+      const matchList = document.getElementById("match-list");
+      matchList.innerHTML = "";
+      
+      matches.forEach((match, index) => {
+        const li = document.createElement("li");
+        li.textContent = `Match ${index + 1}: ${match.team1.join(" vs ")}`;
+        
+        if (match.done) {
+          li.textContent += ` (Winner: ${match.winner})`;
+        }
+        
+        matchList.appendChild(li);
+      });
+    }
+    
+    function removeMatches() {
+      const removePlayerInput = document.getElementById("remove-player-input");
+      const removePlayerName = removePlayerInput.value.trim();
+      
+      if (removePlayerName !== "") {
+        matches = matches.filter(match => {
+          return !match.team1.includes(removePlayerName) && !match.team2.includes(removePlayerName);
+        });
+        
+        removePlayerInput.value = "";
+        renderMatchList();
+      }
+    }
+  </script>
+</body>
+</html>
